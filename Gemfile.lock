@@ -54,8 +54,11 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.6)
+    oj (2.0.14)
     pg (0.15.1)
     polyglot (0.3.3)
+    rabl (0.8.5)
+      activesupport (>= 2.3.14)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -113,7 +116,9 @@ DEPENDENCIES
   activerecord-postgis-adapter
   coffee-rails (~> 3.2.1)
   jquery-rails
+  oj
   pg
+  rabl
   rails (= 3.2.13)
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)

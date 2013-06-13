@@ -23,6 +23,8 @@ end
 gem 'jquery-rails'
 
 gem 'activerecord-postgis-adapter'
+gem 'rabl'
+gem 'oj'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
