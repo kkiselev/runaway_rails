@@ -1,4 +1,9 @@
 Runaway::Application.routes.draw do
+
+  match 'game/:id/change_location' => 'api#change_location', :via => :get
+  match 'game/:id/locations' => 'api#locations', :via => :get
+  match 'game/:id/take_treasure' => 'api#take_treasure', :via => :post
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
