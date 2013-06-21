@@ -1,6 +1,17 @@
 class ApiController < ApplicationController
 	include ApiHelper
 
+	# /register
+	#
+	# POST
+	# 	:login
+	#  	:password
+	# 	:last_name
+	# 	:first_name
+	#
+	# Response: 
+	#  	{ "account_id" : <account_id> }
+	#
 	def register
 		safe -> () {
 			account = Account.new
@@ -16,6 +27,15 @@ class ApiController < ApplicationController
 		}
 	end
 
+	# /auth
+	#
+	# POST
+	# 	:login
+	#  	:password
+	#
+	# Response: 
+	#  	{ "account_id" : <account_id> }
+	#
 	def auth
 		safe -> () {
 			login = params[:login]
@@ -32,6 +52,14 @@ class ApiController < ApplicationController
 		}
 	end
 
+	# /game/:game_id/join_game
+	#
+	# POST
+	# 	:account_id
+	#
+	# Response: 
+	#  	{ "player_id" : <player_id> }
+	#
 	def join_game
 		safe -> () {
 			account = Account.find(params[:account_id])
@@ -60,17 +88,17 @@ class ApiController < ApplicationController
 
 	def change_location
 		safe -> () {
-			api_response_with(200, {
-				game_id: params[:game_id]
-			})
 		}
 	end
 
 	def locations
-
+		safe -> () {
+		}
 	end
 
 	def take_treasure
+		safe -> () {
+		}
 	end
 
 end
