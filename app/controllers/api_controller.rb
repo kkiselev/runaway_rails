@@ -13,7 +13,7 @@ class ApiController < ApplicationController
 	#  	{ "account_id" : <account_id> }
 	#
 	def register
-		safe -> () {
+		safe -> {
 			account = Account.new
 			account.login = params[:login]
 			account.password = params[:password]
@@ -37,7 +37,7 @@ class ApiController < ApplicationController
 	#  	{ "account_id" : <account_id> }
 	#
 	def auth
-		safe -> () {
+		safe -> {
 			login = params[:login]
 			pass = params[:password]
 
@@ -61,7 +61,7 @@ class ApiController < ApplicationController
 	#  	{ "player_id" : <player_id> }
 	#
 	def join_game
-		safe -> () {
+		safe -> {
 			account = Account.find(params[:account_id])
 			unless account
 				error_response_with(401, "Unathorized")
@@ -87,17 +87,17 @@ class ApiController < ApplicationController
 	end
 
 	def change_location
-		safe -> () {
+		safe -> {
 		}
 	end
 
 	def locations
-		safe -> () {
+		safe -> {
 		}
 	end
 
 	def take_treasure
-		safe -> () {
+		safe -> {
 		}
 	end
 

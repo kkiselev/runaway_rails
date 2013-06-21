@@ -13,6 +13,10 @@ module ApiHelper
 	def safe(actions)
 		begin
 			actions.call()
+			
+		rescue ActiveRecord::RecordNotFound => e
+			error_response_with(404, e.message)
+
 		rescue Exception => e
 			error_response_with(500, e.message)
 		end
