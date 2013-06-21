@@ -62,11 +62,11 @@ class ApiController < ApplicationController
 	#
 	def join_game
 		safe -> {
-			account = Account.find(params[:account_id])
+			account = Account.find_by_id(params[:account_id])
 			unless account
 				error_response_with(401, "Unathorized")
 			else 
-				game = Game.find(params[:game_id])
+				game = Game.find_by_id(params[:game_id])
 				unless game
 					error_response_with(404, "Game not found")
 				else 
@@ -88,16 +88,19 @@ class ApiController < ApplicationController
 
 	def change_location
 		safe -> {
+			error_response_with(501, "'change_location' is not implemented yet")
 		}
 	end
 
 	def locations
 		safe -> {
+			error_response_with(501, "'locations' is not implemented yet")
 		}
 	end
 
 	def take_treasure
 		safe -> {
+			error_response_with(501, "'take_treasure' is not implemented yet")
 		}
 	end
 
