@@ -22,6 +22,7 @@ end
 
 gem 'jquery-rails'
 
+gem 'ffi-geos'
 gem 'activerecord-postgis-adapter'
 gem 'rabl'
 gem 'oj'
