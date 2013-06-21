@@ -1,7 +1,6 @@
 class GameController < ApplicationController
 	def create
 		area_points = params[:area_points]
-		puts "POINTS:\n#{area_points}\n\n"
 
 		factory = Game.current_rgeo_factory
 		points = []
@@ -28,6 +27,7 @@ class GameController < ApplicationController
 		unless @game
 			render 'newgame.html.erb'
 		end
+		render 'edit.html.erb'
 	end
 
 	def show
