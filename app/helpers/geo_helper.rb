@@ -11,7 +11,7 @@ module GeoHelper
 		end
 
 		def points_array_from_polygon(polygon)
-			polygon.exterior_ring.points[0..-1].map do |p|
+			polygon.exterior_ring.points[0..-2].map do |p|
 				hash_from_point(p)
 			end
 		end
@@ -29,7 +29,7 @@ module GeoHelper
 			line_string = factory.line_string(points)
 			factory.polygon(line_string)
 		end
-		
+
 	end
 
 end
