@@ -3,9 +3,10 @@ Runaway::Application.routes.draw do
   match 'register' => 'api#register', :via => :post
   match 'auth' => 'api#auth', :via => :post
 
-  match 'game/create' => 'game#create', :via => :post
-  match 'game/:game_id/edit' => 'game#edit', :via => :post
-  match 'game/:game_id' => 'game#show', :via => :get
+  match 'game/:game_id' => 'game#show', :via => :get, :as => :game
+  match 'game/:game_id/edit' => 'game#edit', :via => :get
+  match 'game/:game_id' => 'game#update', :via => :put, :as => :new_game
+  match 'game/:game_id' => 'game#update', :via => :put, :as => :update_game
 
   match 'game/:game_id/join' => 'api#join_game', :via => :post
   match 'game/:game_id/change_location' => 'api#change_location', :via => :get

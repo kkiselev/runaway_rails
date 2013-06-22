@@ -1,7 +1,7 @@
 <%= form_for(@game) do |f| %>
   <% if @game.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@game.errors.count, "error") %> prohibited this supa from being saved:</h2>
+      <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>
 
       <ul>
       <% @game.errors.full_messages.each do |msg| %>
@@ -11,25 +11,29 @@
     </div>
   <% end %>
 
+  <%= f.hidden_field 'game_id', :name => 'game_id', :value => @game.id %>
+
+  <b>Name</b>
+  <div class="field">
+    <%= f.text_field 'name', :name => 'name', :value => @game.name %>
+  </div>
+  <br />
+
+  <b>Area</b>
   <table>
-    <% for pi in 0..@area_points.length-1 do %>
+    <% area_points = GeoHelper.points_array_from_polygon(@game.area) %>
+    <% for pi in 0..area_points.length-1 do %>
     <tr>
       <td><%= f.label "#{pi}" %></td>
       <td>
-        <%= f.label :lng %>
-        <%= f.text_field 'area_points[][lng]', :value => @area_points[pi][:lng] %>
-        &nbsp;
-        <%= f.label :lat %>
-        <%= f.text_field 'area_points[][lat]', :value => @area_points[pi][:lat] %>
+        <%= f.text_field 'area_points[][lng]', :name =>'area_points[][lng]', :value => area_points[pi][:lng] %>
+        <%= f.text_field 'area_points[][lat]', :name => 'area_points[][lat]', :value => area_points[pi][:lat] %>
       </td>
     </tr>
     <% end %>
   </table>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
+  <br />
   <div class="actions">
     <%= f.submit %>
   </div>
