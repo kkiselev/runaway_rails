@@ -7,5 +7,14 @@
 
 <p>
   <b>Area:</b>
-  <%= @game.area %>
+  <table border-width="1">
+
+  	<% points = GeoHelper.points_array_from_polygon(@game.area) %>
+  	<% for i in 0..points.length-1 do %>
+  		<tr><td>
+  			<%= "(#{points[i][:lng]} , #{points[i][:lat]})" %>
+  		</td></tr>
+  	<% end %>
+
+	</table>
 </p>
