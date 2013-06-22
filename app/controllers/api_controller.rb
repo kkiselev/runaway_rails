@@ -88,7 +88,22 @@ class ApiController < ApplicationController
 
 	def change_location
 		safe -> {
-			error_response_with(501, "'change_location' is not implemented yet")
+			player = Player.find_by_id(params[:player_id])
+			game = Game.find_by_id(params[:game_id])
+
+			unless player and game
+				error_response_with(401, "Unathorized")
+			else
+				loc = GeoHelper.point_from_hash({lng: params[:lng], lat: params[:lat]})
+				
+				if loc.within?(game.area) then
+					player.loc = loc
+					player.save!
+					api_response_with(200, {ok: true})
+				else
+					error_response_with(409, "Location is not in the game area")
+				end
+			end
 		}
 	end
 
