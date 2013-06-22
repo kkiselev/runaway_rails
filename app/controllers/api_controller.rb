@@ -94,14 +94,18 @@ class ApiController < ApplicationController
 			unless player and game
 				error_response_with(401, "Unathorized")
 			else
-				loc = GeoHelper.point_from_hash({lng: params[:lng], lat: params[:lat]})
-				
-				if loc.within?(game.area) then
-					player.loc = loc
-					player.save!
-					api_response_with(200, {ok: true})
+				unless params[:lng] and params[:lat]
+					error_response_with(400, "Longitude and latitude are not specified")
 				else
-					error_response_with(409, "Location is not in the game area")
+					loc = GeoHelper.point_from_hash({lng: params[:lng], lat: params[:lat]})
+					
+					if loc.within?(game.area) then
+						player.loc = loc
+						player.save!
+						api_response_with(200, {ok: true})
+					else
+						error_response_with(409, "Location is not in the game area")
+					end
 				end
 			end
 		}
@@ -109,7 +113,43 @@ class ApiController < ApplicationController
 
 	def locations
 		safe -> {
-			error_response_with(501, "'locations' is not implemented yet")
+			player = Player.find_by_id(params[:player_id])
+			game = Game.find_by_id(params[:game_id])
+
+			unless player and game
+				error_response_with(401, "Unathorized")
+			else
+				tl_lng = params[:region][:topleft_lng].to_f
+				tl_lat = params[:region][:topleft_lat].to_f
+				br_lng = params[:region][:bottomright_lng].to_f
+				br_lat = params[:region][:bottomright_lat].to_f
+			
+				unless tl_lng and tl_lat and br_lng and br_lat 
+					error_response_with(400, "Region is not specified")
+				else
+					if loc.within?(game.area) then
+						players = Player.within_box()
+
+						#TODO: clustering is needed here
+
+						objects = []
+						players.each do |player|
+							obj = {
+								id: player.id,
+								name: player.name,
+								loc: GeoHelper.hash_from_point(player.loc),
+								type: "player"
+							}
+							objects << obj
+						end
+						api_response_with(200, {
+							objects: objects
+						})
+					else
+						error_response_with(409, "Location is not in the game area")
+					end
+				end
+			end
 		}
 	end
 
