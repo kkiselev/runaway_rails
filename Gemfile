@@ -22,8 +22,11 @@ end
 
 gem 'jquery-rails'
 
+# GEO gems
 gem 'ffi-geos'
 gem 'activerecord-postgis-adapter'
+gem 'rp_clustering-rgeo-activerecord', :git => 'http://github.com/kkiselev/rp_clustering-rgeo-activerecord.git'
+
 gem 'rabl'
 gem 'oj'
 

@@ -1,3 +1,14 @@
+GIT
+  remote: http://github.com/kkiselev/rp_clustering-rgeo-activerecord.git
+  revision: 21d9bed92ae0f73b26447ad95ce5aa1442f6b95e
+  specs:
+    rp_clustering-rgeo-activerecord (0.0.4)
+      activerecord (~> 3.0)
+      activerecord-postgis-adapter (~> 0.6.4)
+      arel (~> 3.0.2)
+      rgeo (~> 0.3.20)
+      rgeo-activerecord (~> 0.5.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -124,5 +135,6 @@ DEPENDENCIES
   pg
   rabl
   rails (= 3.2.13)
+  rp_clustering-rgeo-activerecord!
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
