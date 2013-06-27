@@ -1,3 +1,8 @@
+<script src="http://api-maps.yandex.ru/1.1/index.xml?key=ANpUFEkBAAAAf7jmJwMAHGZHrcKNDsbEqEVjEUtCmufxQMwAAAAAAAAAAAAvVrubVT4btztbduoIgTLAeFILaQ==" type="text/javascript"></script>
+<link rel="stylesheet" href="http://api-maps.yandex.ru/1.1.21/_YMaps.css">
+<script type="text/javascript" charset="utf-8" src="http://api-maps.yandex.ru/1.1.21/_YMaps.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://api-maps.yandex.ru/1.1.21/xml/data.xml?v=3.105.03.7.0-0"></script>
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -9,12 +14,53 @@
   <b>Area:</b>
   <table>
 
-  	<% points = GeoHelper.points_array_from_polygon(@game.area) %>
-  	<% for i in 0..points.length-1 do %>
+  	<% @points = GeoHelper.points_array_from_polygon(@game.area) %>
+  	<% for i in 0..@points.length-1 do %>
   		<tr><td>
-  			<%= "(#{points[i][:lng]} , #{points[i][:lat]})" %>
+  			<%= "(#{@points[i][:lng]} , #{@points[i][:lat]})" %>
   		</td></tr>
   	<% end %>
 
 	</table>
 </p>
+
+<script type="text/javascript">
+        // Создание обработчика для события window.onLoad
+        YMaps.jQuery(function () {
+            // Создание экземпляра карты и его привязка к созданному контейнеру
+            var map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
+
+            // Установка для карты ее центра и масштаба
+            map.setCenter(new YMaps.GeoPoint(37.64, 55.76), 8);
+
+            // Создание стиля для многоугольника
+            var style = new YMaps.Style("default#greenPoint");
+            style.polygonStyle = new YMaps.PolygonStyle();
+            style.polygonStyle.fill = 1;
+            style.polygonStyle.outline = 1;
+            style.polygonStyle.strokeWidth = 10;
+            style.polygonStyle.strokeColor = "ffff0088";
+            style.polygonStyle.fillColor = "ff000055";
+            YMaps.Styles.add("polygon#Example", style);
+
+            // Создание многоугольника
+            var polygon = new YMaps.Polygon([
+						  	<% for i in 0..@points.length-1 do %>
+		                new YMaps.GeoPoint(<%= "#{@points[i][:lng]},#{@points[i][:lat]}" %>),
+						  	<% end %>
+            ], {
+                style: "polygon#Example",
+                hasHint: 1,
+                hasBalloon: 1
+            });
+
+            // Установка данных для многоугольника
+            polygon.name = "Москва";
+            polygon.description = "Столица России"; 
+
+            // Добавление многоугольника на карту
+            map.addOverlay(polygon);
+        });
+</script>
+
+<div id="YMapsID" style="width:600px;height:400px" class="YMaps YMaps-safari YMaps-cursor-grab"><div class="YMaps-layer-container" style="z-index: 1; "><div class="YMaps-map-type-layer-container"><div class="YMaps-layer" style="z-index: 5; left: 0px; top: 0px; "><div style="z-index:6;" class="YMaps-tile-container"><img style="position: absolute; width: 256px; height: 256px; left: -92px; top: -182px; " src="http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=308&amp;y=159&amp;z=9&amp;g=Gag"><img style="position: absolute; width: 256px; height: 256px; left: 164px; top: -182px; " src="http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=309&amp;y=159&amp;z=9&amp;g=Gagari"><img style="position: absolute; width: 256px; height: 256px; left: 420px; top: -182px; " src="http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=310&amp;y=159&amp;z=9&amp;g=G"><img style="position: absolute; width: 256px; height: 256px; left: 676px; top: -182px; " src="http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=311&amp;y=159&amp;z=9&amp;g=Gaga"><img style="position: absolute; width: 256px; height: 256px; left: -92px; top: 74px; " src="http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=308&amp;y=160&amp;z=9&amp;g=Gaga"><img style="position: absolute; width: 256px; height: 256px; left: 164px; top: 74px; " src="http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=309&amp;y=160&amp;z=9&amp;g=Gagarin"><img style="position: absolute; width: 256px; height: 256px; left: 420px; top: 74px; " src="http://vec01.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=310&amp;y=160&amp;z=9&amp;g=Ga"><img style="position: absolute; width: 256px; height: 256px; left: 676px; top: 74px; " src="http://vec03.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=311&amp;y=160&amp;z=9&amp;g=Gagar"><img style="position: absolute; width: 256px; height: 256px; left: -92px; top: 330px; " src="http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=308&amp;y=161&amp;z=9&amp;g=Gagar"><img style="position: absolute; width: 256px; height: 256px; left: 164px; top: 330px; " src="http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=309&amp;y=161&amp;z=9&amp;g="><img style="position: absolute; width: 256px; height: 256px; left: 420px; top: 330px; " src="http://vec02.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=310&amp;y=161&amp;z=9&amp;g=Gag"><img style="position: absolute; width: 256px; height: 256px; left: 676px; top: 330px; " src="http://vec04.maps.yandex.net/tiles?l=map&amp;v=2.45.0&amp;x=311&amp;y=161&amp;z=9&amp;g=Gagari"></div></div></div><div class="YMaps-layer YMaps-common-object-layer" style="z-index: 50; left: 0px; top: 0px; "><div style="position: absolute; width: 0px; height: 0px; z-index: 0; left: -600px; top: -400px; " class=""><svg zoomAndPan="disable" viewBox="-600 -400 1800 1200" width="1800" height="1200"><g><path stroke-linejoin="round" fill-rule="evenodd" name="polygon" zIndex="1" class=" YMaps-cursor-pointer" fill="#ff0000" stroke="#ffff00" stroke-opacity="0.5333333333333333" stroke-width="10px" fill-opacity="0.3333333333333333" d="M 283.6414794921875,318.17034912109375 L 246.64349365234375,294.17047119140625 L 201.6424560546875,195.1702880859375 L 214.64337158203125,128.1707763671875 L 268.64208984375,102.17266845703125 L 324.64227294921875,110.1724853515625 L 371.64178466796875,160.1708984375 L 370.640869140625,245.17230224609375 L 371.64178466796875,273.16925048828125 L 310.64373779296875,318.17034912109375 Z"></path></g></svg></div></div></div><div style="background-color: transparent !important;border: none !important;float: none !important;z-index: 1001 !important;position: absolute !important;overflow: undefined !important;padding: 0 !important;display: block !important;margin-top: 0 !important;margin-right: 0 !important;margin-bottom: 0 !important;margin-left: 0 !important;height: 20px !important;width: 51px !important;" class="YMaps-logo"><a href="http://maps.yandex.ru?origin=jsapi&amp;ll=37.6400000229478,55.76000000865715&amp;z=9&amp;l=map" target="_blank" class="YMaps-logo-link" style="background-color: transparent !important;border: none !important;float: none !important;z-index: 1001 !important;position: absolute !important;overflow: undefined !important;padding: 0 !important;display: block !important;margin-top: 0 !important;margin-right: 0 !important;margin-bottom: 0 !important;margin-left: 0 !important;height: 20px !important;width: 51px !important;"><i style="background-color: transparent !important;border: none !important;float: none !important;z-index: 1001 !important;position: absolute !important;overflow: undefined !important;padding: 0 !important;margin-top: 0 !important;margin-right: 0 !important;margin-bottom: 0 !important;margin-left: 0 !important;height: 106px !important;width: 56px !important;"></i></a></div><div class="YMaps-copyrights" style="background-color: transparent !important; border: none !important; float: none !important; z-index: 1001 !important; position: absolute !important; overflow: visible !important; padding: 0px !important; display: block !important; margin: 0px !important; height: auto !important; width: auto !important; color: rgb(68, 68, 68); "><span style="background-color: transparent !important; border: none !important; float: none !important; z-index: 1001 !important; position: static !important; padding: 0px !important; display: inline !important; font-family: Arial, sans-serif !important; font-size: 10px !important; text-indent: 0px !important; text-align: left !important; white-space: nowrap !important; line-height: normal !important; text-decoration: none !important; -webkit-text-size-adjust: none !important; margin: 0px !important; height: auto !important; width: auto !important; color: rgb(68, 68, 68); ">©&nbsp;ВТУ&nbsp;ГШ&nbsp;ВС&nbsp;РФ, ©&nbsp;ЗАО&nbsp;«ТГА»,&nbsp;2006, ©&nbsp;ЗАО «Резидент», ©&nbsp;Роскартография, ©&nbsp;Яндекс&nbsp;–&nbsp;</span><a href="http://maps.yandex.ru/agreement.xml" target="_blank" style="background-color: transparent !important; border: none !important; float: none !important; z-index: 1001 !important; position: static !important; padding: 0px !important; display: inline !important; font-family: Arial, sans-serif !important; font-size: 10px !important; text-indent: 0px !important; text-align: left !important; white-space: nowrap !important; line-height: normal !important; text-decoration: underline !important; -webkit-text-size-adjust: none !important; margin: 0px !important; height: auto !important; width: auto !important; color: rgb(68, 68, 68); ">Условия использования</a></div></div>
