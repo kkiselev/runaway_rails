@@ -62,11 +62,11 @@ class ApiController < ApplicationController
 	#
 	def join_game
 		safe -> {
-			account = Account.find_by_id(params[:account_id])
+			account = Account.find_by_id(params[:account_id].to_i)
 			unless account
 				error_response_with(401, "Unathorized")
 			else 
-				game = Game.find_by_id(params[:game_id])
+				game = Game.find_by_id(params[:game_id].to_i)
 				unless game
 					error_response_with(404, "Game not found")
 				else 

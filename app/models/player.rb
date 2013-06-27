@@ -1,6 +1,7 @@
 class Player < ActiveRecord::Base
   attr_accessible :loc, :name
-  belongs_to :game, :account
+  belongs_to :game
+  belongs_to :account
 
   self.rgeo_factory_generator = RGeo::Geos.factory_generator
 
