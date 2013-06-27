@@ -121,6 +121,29 @@ class ApiController < ApplicationController
 		}
 	end
 
+	# /game/:game_id/locations
+	#
+	# GET
+	# 	:player_id
+	#  	:region[topleft_lng]
+	#  	:region[topleft_lng]
+	#  	:region[bottomright_lng]
+	#  	:region[bottomright_lat]
+	#
+	# Response: 
+	#  	{ 
+	#      "objects" : [
+	#          ...
+	#          {
+	#              "id": 1,
+	#              "name": "Object/Player name",
+	#              "loc": { "lng" : 37.6767, "lat" : 55.89898 },
+	#              "type": "player"|"group"|"treasure"
+	#          }
+	#          ...
+	#      ]
+	#   }
+	#
 	def locations
 		safe -> {
 			player = Player.find_by_id(params[:player_id])
@@ -137,27 +160,23 @@ class ApiController < ApplicationController
 				unless tl_lng and tl_lat and br_lng and br_lat 
 					error_response_with(400, "Region is not specified")
 				else
-					if loc.within?(game.area) then
-						players = Player.within_box()
+					players = Player.within_box(tl_lng, tl_lat, br_lng, br_lat)
 
-						#TODO: clustering is needed here
+					#TODO: clustering is needed here
 
-						objects = []
-						players.each do |player|
-							obj = {
-								id: player.id,
-								name: player.name,
-								loc: GeoHelper.hash_from_point(player.loc),
-								type: "player"
-							}
-							objects << obj
-						end
-						api_response_with(200, {
-							objects: objects
-						})
-					else
-						error_response_with(409, "Location is not in the game area")
+					objects = []
+					players.each do |player|
+						obj = {
+							id: player.id,
+							name: player.name,
+							loc: GeoHelper.hash_from_point(player.loc),
+							type: "player"
+						}
+						objects << obj
 					end
+					api_response_with(200, {
+						objects: objects
+					})
 				end
 			end
 		}
