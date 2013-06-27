@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621100209) do
+ActiveRecord::Schema.define(:version => 20130627124217) do
 
   create_table "accounts", :force => true do |t|
     t.string   "login"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20130621100209) do
     t.datetime "created_at",                                          :null => false
     t.datetime "updated_at",                                          :null => false
     t.spatial  "loc",        :limit => {:srid=>4326, :type=>"point"}
+    t.integer  "account_id"
   end
 
 end
