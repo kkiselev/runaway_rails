@@ -86,6 +86,16 @@ class ApiController < ApplicationController
 		}
 	end
 
+	# /game/:game_id/change_location
+	#
+	# POST
+	# 	:player_id
+	#  	:lng
+	#  	:lat
+	#
+	# Response: 
+	#  	{ "ok" : 1 }
+	#
 	def change_location
 		safe -> {
 			player = Player.find_by_id(params[:player_id])
