@@ -52,7 +52,7 @@ class ApiController < ApplicationController
 		}
 	end
 
-	# /game/:game_id/join_game
+	# /game/:game_id/join
 	#
 	# POST
 	# 	:account_id
@@ -136,7 +136,6 @@ class ApiController < ApplicationController
 	#          ...
 	#          {
 	#              "id": 1,
-	#              "name": "Object/Player name",
 	#              "loc": { "lng" : 37.6767, "lat" : 55.89898 },
 	#              "type": "player"|"group"|"treasure"
 	#          }
@@ -145,7 +144,7 @@ class ApiController < ApplicationController
 	#   }
 	#
 	def locations
-		safe -> {
+		# safe -> {
 			player = Player.find_by_id(params[:player_id])
 			game = Game.find_by_id(params[:game_id])
 
@@ -160,26 +159,57 @@ class ApiController < ApplicationController
 				unless tl_lng and tl_lat and br_lng and br_lat 
 					error_response_with(400, "Region is not specified")
 				else
-					players = Player.within_box(tl_lng, tl_lat, br_lng, br_lat)
+					bbox = GeoHelper.normalized_rect(tl_lng, tl_lat, br_lng, br_lat)
+					players = Player.within_box(bbox[:tl_lng], bbox[:tl_lat], bbox[:br_lng], bbox[:br_lat])
 
-					#TODO: clustering is needed here
+					arel_table = Player.arel_table
+					loc_attr = arel_table[:loc]
+
+					grid_size = bbox[:grid_size]
+					
+					cluster_size_attr_name = "num"
+					id_attr_name = "id"
+					loc_attr_name = "loc"
+
+
+					if (grid_size) then
+						players = players.select("MIN(#{id_attr_name}) AS #{id_attr_name}")
+
+						# add number of objects
+						players = players.select(loc_attr.count().as(cluster_size_attr_name))
+
+						# add centroid of cluster
+						players = players.select(GeoHelper.st_centroid(GeoHelper.st_collect(loc_attr)).as(loc_attr_name))
+
+						snap_to_grid = GeoHelper.st_snap_to_grid(Player.arel_table, :loc, grid_size)
+						players = players.group(snap_to_grid)
+					else 
+						players = players.select("1 AS #{cluster_size_attr_name}")
+						players = players.select("#{id_attr_name}")
+						players = players.select("#{loc_attr_name}")
+					end
 
 					objects = []
 					players.each do |player|
 						obj = {
-							id: player.id,
-							name: player.name,
-							loc: GeoHelper.hash_from_point(player.loc),
-							type: "player"
+							id: player[id_attr_name],
+							loc: GeoHelper.hash_from_point(player[loc_attr_name]),
+							num: player[cluster_size_attr_name]
 						}
+						if player[cluster_size_attr_name].to_i > 1 then
+							obj[:type] = "group"
+						else
+							obj[:type] = "player"
+						end
 						objects << obj
 					end
+
 					api_response_with(200, {
 						objects: objects
 					})
 				end
 			end
-		}
+		# }
 	end
 
 	def take_treasure
