@@ -1,12 +1,12 @@
 module GeoHelper
 
 		METERS_TO_POINTS_SCALE_FACTOR = 1.473548e-5
-		MIN_GRID_CELL_SIZE = METERS_TO_POINTS_SCALE_FACTOR * 100
+		MIN_GRID_CELL_SIZE = METERS_TO_POINTS_SCALE_FACTOR * 1000
 
 		MAP_GRID_SIZE = 10
 
-		MAP_WIDTH = 180 * 2
-		MAP_HEIGHT = 90 * 2
+		MAP_WIDTH = 180 * 2.0
+		MAP_HEIGHT = 90 * 2.0
 		MAP_ORIGIN_LNG = -MAP_WIDTH/2.0
 		MAP_ORIGIN_LAT = -MAP_HEIGHT/2.0
 
@@ -46,7 +46,7 @@ module GeoHelper
 					self.map_sizes_ = []
 					cur_size = MAP_WIDTH / MAP_GRID_SIZE
 
-					while cur_size > MIN_GRID_CELL_SIZE * 2e-1 do
+					while cur_size > MIN_GRID_CELL_SIZE do
 						self.map_sizes_ << cur_size
 						cur_size /= 2.0
 					end
@@ -60,10 +60,11 @@ module GeoHelper
 				rect_max_size = [w, h].max
 
 				sizes = map_sizes()
+				rect_max_size = [rect_max_size, sizes[0]].min
 				size = nil
 
 				for i in 0..(sizes.length-1) do
-					size = sizes[i] if sizes[i] > rect_max_size
+					size = sizes[i] if sizes[i] >= rect_max_size
 				end
 				size
 			end
@@ -73,7 +74,7 @@ module GeoHelper
 			end
 
 			def round_right_number_with_size(number, size)
-				(number / size.to_f + 0.5).to_i * size
+				(number / size.to_f + 0.5).round * size
 			end
 
 			def normalized_rect(tl_lng, tl_lat, br_lng, br_lat)
