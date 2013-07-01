@@ -91,8 +91,8 @@ module GeoHelper
 			def st_snap_to_grid(table, field, size)
 				RGeo::ActiveRecord::SpatialNamedFunction.new(
 					'ST_SnapToGrid',
-					[table[field], size.to_s], 
-					[true, true, false]
+					[table[field], (size/2.0).to_s, (size/2.0).to_s, size.to_s, size.to_s], 
+					[true, true, false, false, false, false]
 				)
 			end
 
