@@ -19,6 +19,11 @@ class Player < ActiveRecord::Base
 			where("loc && ?", box)
 		end
 
+		def by_token(token) 
+			player_id = token.to_i
+			Player.find_by_id(player_id)
+		end
+
   end
 
 end

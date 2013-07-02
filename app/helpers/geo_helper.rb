@@ -3,7 +3,7 @@ module GeoHelper
 		METERS_TO_POINTS_SCALE_FACTOR = 1.473548e-5
 		MIN_GRID_CELL_SIZE = METERS_TO_POINTS_SCALE_FACTOR * 1000
 
-		MAP_GRID_SIZE = 10
+		MAP_GRID_SIZE = 100
 
 		MAP_WIDTH = 180 * 2.0
 		MAP_HEIGHT = 90 * 2.0
@@ -14,11 +14,19 @@ module GeoHelper
 			attr_accessor	:map_sizes_
 
 			def point_from_hash(hash)
-				Game.current_rgeo_factory.point(hash[:lng].to_f, hash[:lat].to_f)
+				unless hash
+					nil
+				else 
+					Game.current_rgeo_factory.point(hash[:lng].to_f, hash[:lat].to_f)
+				end
 			end
 
 			def hash_from_point(point)
-				{lng: point.x, lat: point.y}
+				unless point
+					nil
+				else
+					{lng: point.x, lat: point.y}
+				end
 			end
 
 			def points_array_from_polygon(polygon)
@@ -91,7 +99,7 @@ module GeoHelper
 			def st_snap_to_grid(table, field, size)
 				RGeo::ActiveRecord::SpatialNamedFunction.new(
 					'ST_SnapToGrid',
-					[table[field], (size/2.0).to_s, (size/2.0).to_s, size.to_s, size.to_s], 
+					[table[field], 0.to_s, 0.to_s, size.to_s, size.to_s], 
 					[true, true, false, false, false, false]
 				)
 			end

@@ -22,4 +22,21 @@ module ApiHelper
 		end
 	end
 
+	def dict_with_account_and_token(account, token) 
+		{
+			id: account.id,
+			first_name: account.first_name,
+			last_name: account.last_name,
+			account_token: token
+		}
+	end
+
+	def dict_with_player_and_token(player, token)
+		{
+			id: player.id,
+			loc: GeoHelper.hash_from_point(player.loc),
+			player_token: token
+		}
+	end
+
 end

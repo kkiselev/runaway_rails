@@ -9,9 +9,6 @@ class ApiController < ApplicationController
 	# 	:last_name
 	# 	:first_name
 	#
-	# Response: 
-	#  	{ "account_id" : <account_id> }
-	#
 	def register
 		safe -> {
 			account = Account.new
@@ -21,9 +18,9 @@ class ApiController < ApplicationController
 			account.first_name = params[:first_name]
 			account.save!
 
-			api_response_with(200, {
-				account_id: account.id
-			})
+			api_response_with(200, 
+				dict_with_account_and_token(account, account.id)
+			)
 		}
 	end
 
@@ -32,9 +29,6 @@ class ApiController < ApplicationController
 	# POST
 	# 	:login
 	#  	:password
-	#
-	# Response: 
-	#  	{ "account_id" : <account_id> }
 	#
 	def auth
 		safe -> {
@@ -45,9 +39,9 @@ class ApiController < ApplicationController
 			unless account 
 				error_response_with(401, "Authorization failed")
 			else 
-				api_response_with(200, {
-					account_id: account.id
-				})
+				api_response_with(200, 
+					dict_with_account_and_token(account, account.id)
+				)
 			end
 		}
 	end
@@ -55,14 +49,14 @@ class ApiController < ApplicationController
 	# /game/:game_id/join
 	#
 	# POST
-	# 	:account_id
+	# 	:account_token
 	#
 	# Response: 
 	#  	{ "player_id" : <player_id> }
 	#
 	def join_game
 		safe -> {
-			account = Account.find_by_id(params[:account_id].to_i)
+			account = Account.by_token(params[:account_token])
 			unless account
 				error_response_with(401, "Unathorized")
 			else 
@@ -77,10 +71,7 @@ class ApiController < ApplicationController
 						player.account = account
 						player.save!
 					end
-					response = {
-						player_id: player.id
-					}
-					api_response_with(200, response)
+					api_response_with(200, dict_with_player_and_token(player, player.id))
 				end	
 			end
 		}
@@ -89,7 +80,7 @@ class ApiController < ApplicationController
 	# /game/:game_id/change_location
 	#
 	# POST
-	# 	:player_id
+	# 	:player_token
 	#  	:lng
 	#  	:lat
 	#
@@ -98,7 +89,7 @@ class ApiController < ApplicationController
 	#
 	def change_location
 		safe -> {
-			player = Player.find_by_id(params[:player_id])
+			player = Player.by_token(params[:player_token])
 			game = Game.find_by_id(params[:game_id])
 
 			unless player and game
@@ -124,7 +115,7 @@ class ApiController < ApplicationController
 	# /game/:game_id/locations
 	#
 	# GET
-	# 	:player_id
+	# 	:player_token
 	#  	:region[topleft_lng]
 	#  	:region[topleft_lng]
 	#  	:region[bottomright_lng]
@@ -145,7 +136,7 @@ class ApiController < ApplicationController
 	#
 	def locations
 		safe -> {
-			player = Player.find_by_id(params[:player_id])
+			player = Player.by_token(params[:player_token])
 			game = Game.find_by_id(params[:game_id])
 
 			unless player and game
