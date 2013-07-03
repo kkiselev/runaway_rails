@@ -63,7 +63,6 @@ class ApiController < ApplicationController
 				error_response_with(401, "Unathorized")
 			else 
 				games = Game.order("created_at DESC")
-				puts "GAMES (#{games.class}):\n#{games}\n\n"
 				list = []
 				for i in 0..(games.length-1) do 
 					game = {
