@@ -51,7 +51,7 @@ class ApiController < ApplicationController
 		}
 	end
 
-	# /game/list
+	# /games_list
 	#
 	# GET
 	# 	:account_token
@@ -63,18 +63,18 @@ class ApiController < ApplicationController
 				error_response_with(401, "Unathorized")
 			else 
 				games = Game.order("created_at DESC")
-
+				puts "GAMES (#{games.class}):\n#{games}\n\n"
 				list = []
 				for i in 0..(games.length-1) do 
 					game = {
-						id: game.id,
-						name: game.name,
-						area: GeoHelper.points_array_from_polygon(game.area)
+						id: games[i].id,
+						name: games[i].name,
+						area: GeoHelper.points_array_from_polygon(games[i].area)
 					}
 					list << game
 				end
 
-				api_response(200, {
+				api_response_with(200, {
 					games: list
 				})
 			end

@@ -8,7 +8,7 @@ Runaway::Application.routes.draw do
   match 'game/:game_id' => 'game#update', :via => :put, :as => :new_game
   match 'game/:game_id' => 'game#update', :via => :put, :as => :update_game
 
-  match 'game/list' => 'api#games_list', :via => :get
+  match 'games_list' => 'api#games_list', :via => :get
   match 'game/:game_id/join' => 'api#join_game', :via => :post
   match 'game/:game_id/change_location' => 'api#change_location', :via => :post
   match 'game/:game_id/locations' => 'api#locations', :via => :get
