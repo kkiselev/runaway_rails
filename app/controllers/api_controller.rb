@@ -11,16 +11,21 @@ class ApiController < ApplicationController
 	#
 	def register
 		safe -> {
-			account = Account.new
-			account.login = params[:login]
-			account.password = params[:password]
-			account.last_name = params[:last_name]
-			account.first_name = params[:first_name]
-			account.save!
+			account = Account.where("login = :login", :login => params[:login])
+			unless account
+				account = Account.new
+				account.login = params[:login]
+				account.password = params[:password]
+				account.last_name = params[:last_name]
+				account.first_name = params[:first_name]
+				account.save!
 
-			api_response_with(200, 
-				dict_with_account_and_token(account, account.id)
-			)
+				api_response_with(200, 
+					dict_with_account_and_token(account, account.id)
+				)
+			else
+				error_response_with(403, "Account already exists")
+			end
 		}
 	end
 
@@ -46,13 +51,40 @@ class ApiController < ApplicationController
 		}
 	end
 
+	# /game/list
+	#
+	# GET
+	# 	:account_token
+	#
+	def games_list
+		safe -> {
+			account = Account.by_token(params[:account_token])
+			unless account
+				error_response_with(401, "Unathorized")
+			else 
+				games = Game.order("created_at DESC")
+
+				list = []
+				for i in 0..(games.length-1) do 
+					game = {
+						id: game.id,
+						name: game.name,
+						area: GeoHelper.points_array_from_polygon(game.area)
+					}
+					list << game
+				end
+
+				api_response(200, {
+					games: list
+				})
+			end
+		}
+	end
+
 	# /game/:game_id/join
 	#
 	# POST
 	# 	:account_token
-	#
-	# Response: 
-	#  	{ "player_id" : <player_id> }
 	#
 	def join_game
 		safe -> {
@@ -105,7 +137,7 @@ class ApiController < ApplicationController
 						player.save!
 						api_response_with(200, {ok: true})
 					else
-						error_response_with(409, "Location is not in the game area")
+						error_response_with(403, "Location is not in the game area")
 					end
 				end
 			end
