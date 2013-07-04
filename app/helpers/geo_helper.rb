@@ -74,7 +74,7 @@ module GeoHelper
 				for i in 0..(sizes.length-1) do
 					size = sizes[i] if sizes[i] >= rect_max_size/20.0
 				end
-				puts "\n\n\nSIZES:\n#{sizes}\n\nGRID SIZE: #{size}\n\n\n\n"
+				# puts "\n\n\nSIZES:\n#{sizes}\n\nGRID SIZE: #{size}\n\n\n\n"
 				size
 			end
 
