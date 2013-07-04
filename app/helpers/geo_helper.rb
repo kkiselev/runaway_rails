@@ -89,10 +89,10 @@ module GeoHelper
 			def normalized_rect(tl_lng, tl_lat, br_lng, br_lat)
 				grid_size = grid_size_for_rect(tl_lng, tl_lat, br_lng, br_lat)
 				if grid_size then
-					tl_lng = round_left_number_with_size(tl_lng, grid_size) 
-					tl_lat = round_right_number_with_size(tl_lat, grid_size)
-					br_lng = round_right_number_with_size(br_lng, grid_size)
-					br_lat = round_left_number_with_size(br_lat, grid_size)
+					tl_lng = [-MAP_WIDTH/2.0, round_left_number_with_size(tl_lng, grid_size) - grid_size].max
+					tl_lat = [MAP_HEIGHT/2.0, round_right_number_with_size(tl_lat, grid_size) + grid_size].min
+					br_lng = [MAP_WIDTH/2.0, round_right_number_with_size(br_lng, grid_size) + grid_size].min
+					br_lat = [-MAP_HEIGHT/2.0, round_left_number_with_size(br_lat, grid_size) - grid_size].max
 				end
 				{tl_lng: tl_lng, tl_lat: tl_lat, br_lng: br_lng, br_lat: br_lat, grid_size: grid_size}
 			end
