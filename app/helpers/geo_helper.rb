@@ -1,9 +1,9 @@
 module GeoHelper
 
 		METERS_TO_POINTS_SCALE_FACTOR = 1.473548e-5
-		MIN_GRID_CELL_SIZE = METERS_TO_POINTS_SCALE_FACTOR * 1000
+		MIN_GRID_CELL_SIZE = METERS_TO_POINTS_SCALE_FACTOR * 100
 
-		MAP_GRID_SIZE = 100
+		MAP_GRID_SIZE = 50
 
 		MAP_WIDTH = 180 * 2.0
 		MAP_HEIGHT = 90 * 2.0
@@ -72,8 +72,9 @@ module GeoHelper
 				size = nil
 
 				for i in 0..(sizes.length-1) do
-					size = sizes[i] if sizes[i] >= rect_max_size
+					size = sizes[i] if sizes[i] >= rect_max_size/20.0
 				end
+				puts "\n\n\nSIZES:\n#{sizes}\n\nGRID SIZE: #{size}\n\n\n\n"
 				size
 			end
 
@@ -94,6 +95,20 @@ module GeoHelper
 					br_lat = round_left_number_with_size(br_lat, grid_size)
 				end
 				{tl_lng: tl_lng, tl_lat: tl_lat, br_lng: br_lng, br_lat: br_lat, grid_size: grid_size}
+			end
+
+			def cell_index(point, grid_size)
+				row = (point.y / grid_size.to_f).to_i
+				col = (point.x / grid_size.to_f).to_i
+				cols_num = (MAP_WIDTH / grid_size.to_f).to_i
+				row * cols_num + col
+			end
+			
+			def cell_point(index, grid_size)
+				cols_num = (MAP_WIDTH / grid_size.to_f).to_i
+				row = index/cols_num
+				col = index%cols_num
+				point_from_hash({lng: (col * grid_size), lat: (row * grid_size)})
 			end
 
 			def st_snap_to_grid(table, field, size)
