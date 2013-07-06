@@ -11,7 +11,7 @@ class ApiController < ApplicationController
 	#
 	def register
 		safe -> {
-			account = Account.where("login = :login", :login => params[:login])
+			account = Account.where("login = :login", :login => params[:login]).first
 			unless account
 				account = Account.new
 				account.login = params[:login]
@@ -215,8 +215,10 @@ class ApiController < ApplicationController
 					player_groups = {}
 
 					if grid_size then
-						players.each do |player|
-							ci = GeoHelper.cell_index(player[loc_attr_name], grid_size)
+						players.each do |p|
+							next if player.id.to_i == p[id_attr_name].to_i
+
+							ci = GeoHelper.cell_index(p[loc_attr_name], grid_size)
 							cp = GeoHelper.cell_point(ci, grid_size)
 
 							group = player_groups[ci]
@@ -231,19 +233,19 @@ class ApiController < ApplicationController
 							group_centroid = group[:group_centroid]
 
 							unless group_centroid
-								group_centroid = GeoHelper.hash_from_point(player.loc)
+								group_centroid = GeoHelper.hash_from_point(p.loc)
 							else 
 								avg_x = group_centroid[:lng]
 								avg_y = group_centroid[:lat]
-								new_avg_x = (avg_x * num + player[loc_attr_name].x) / (num + 1).to_f
-								new_avg_y = (avg_y * num + player[loc_attr_name].y) / (num + 1).to_f
+								new_avg_x = (avg_x * num + p[loc_attr_name].x) / (num + 1).to_f
+								new_avg_y = (avg_y * num + p[loc_attr_name].y) / (num + 1).to_f
 								group_centroid = {lng: new_avg_x, lat: new_avg_y}
 							end
 							group[:group_centroid] = group_centroid
 							player_hash = {
-								id: player[id_attr_name]
+								id: p[id_attr_name]
 							}
-							group[:players] << player
+							group[:players] << player_hash
 							player_groups[ci] = group
 						end
 					end
@@ -264,6 +266,8 @@ class ApiController < ApplicationController
 						end
 						objects << obj
 					end
+
+					# TODO: Add treasure object
 
 					api_response_with(200, {
 						objects: objects
