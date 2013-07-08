@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130627134413) do
+ActiveRecord::Schema.define(:version => 20130708141137) do
 
   create_table "accounts", :force => true do |t|
     t.string   "login"
@@ -24,9 +24,10 @@ ActiveRecord::Schema.define(:version => 20130627134413) do
 
   create_table "games", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
-    t.spatial  "area",       :limit => {:srid=>4326, :type=>"polygon"}
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
+    t.spatial  "area",         :limit => {:srid=>4326, :type=>"polygon"}
+    t.spatial  "treasure_loc", :limit => {:srid=>4326, :type=>"point"}
   end
 
   create_table "players", :force => true do |t|

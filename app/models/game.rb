@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  attr_accessible :area, :name
+  attr_accessible :area, :name, :treasure_loc
   has_many :players
 
   self.rgeo_factory_generator = RGeo::Geos.factory_generator
