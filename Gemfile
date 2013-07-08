@@ -21,6 +21,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+# JS gems
 gem 'therubyracer'
 gem 'execjs'
 
