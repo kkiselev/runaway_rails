@@ -166,7 +166,7 @@ class ApiController < ApplicationController
 	#   }
 	#
 	def locations
-		# safe -> {
+		safe -> {
 			player = Player.by_token(params[:player_token])
 			game = Game.find_by_id(params[:game_id])
 
@@ -274,7 +274,7 @@ class ApiController < ApplicationController
 					})
 				end
 			end
-		# }
+		}
 	end
 
 	def take_treasure
