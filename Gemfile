@@ -21,6 +21,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'therubyracer'
+gem 'execjs'
 
 # GEO gems
 gem 'ffi-geos'
