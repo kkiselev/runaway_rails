@@ -1,7 +1,7 @@
 module ApiHelper
 
 	def api_response_with(status, obj)
-		render status: status, text: JSON.generate(obj, :ascii_only => true)
+		render status: status, text: obj.to_json
 	end
 
 	def error_response_with(status, error_message)
