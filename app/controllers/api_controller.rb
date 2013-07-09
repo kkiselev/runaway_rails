@@ -279,7 +279,7 @@ class ApiController < ApplicationController
 								id: holder.id,
 								loc: treasure_loc
 							}
-							treasure[:attached_at] = game.treasure_attached_at
+							treasure[:attached_at] = game.treasure_attached_at.to_i
 							treasure[:safe_hold_time] = game.treasure_safe_hold_time
 						end
 					end
