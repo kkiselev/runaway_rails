@@ -65,11 +65,7 @@ class ApiController < ApplicationController
 				games = Game.order("created_at DESC")
 				list = []
 				for i in 0..(games.length-1) do 
-					game = {
-						id: games[i].id,
-						name: games[i].name,
-						area: GeoHelper.points_array_from_polygon(games[i].area)
-					}
+					game = games[i].to_hash
 					list << game
 				end
 
@@ -279,7 +275,22 @@ class ApiController < ApplicationController
 
 	def take_treasure
 		safe -> {
-			error_response_with(501, "'take_treasure' is not implemented yet")
+			player = Player.by_token(params[:player_token])
+			game = Game.find_by_id(params[:game_id])
+
+			unless player and game
+				error_response_with(401, "Unathorized")
+			else
+				ok = game.attach_treasure_to_player_if_possible(player)
+				if ok then
+					game.save
+					api_response_with(200, {
+						game: game.to_hash
+					})
+				else
+					error_response_with(403, "Attach failed")
+				end	
+			end
 		}
 	end
 
