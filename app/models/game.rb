@@ -5,7 +5,8 @@ class Game < ActiveRecord::Base
   								:treasure_loc, 
   								:treasure_holder_id, 
   								:treasure_attached_at, 
-  								:treasure_safe_hold_time, 
+  								:treasure_safe_hold_time,
+  								:treasure_allowed_distance,
 
   								:allowed_inactivity_time
 
@@ -58,12 +59,21 @@ class Game < ActiveRecord::Base
 
   def attach_treasure_to_player_if_possible(player)
   	cur_timestamp = Time.now.to_i
-		if not self.treasure_attached_at or (self.treasure_attached_at.to_i + self.treasure_safe_hold_time < cur_timestamp) then
-			self.attach_treasure_to_player(player)
-			return true
-		end
+
 		if player and player.id == self.treasure_holder_id then
 			return true
+		end
+
+  	# check time
+		if not self.treasure_attached_at or (self.treasure_attached_at.to_i + self.treasure_safe_hold_time < cur_timestamp) then
+
+			#check distance
+			min_distance = self.treasure_allowed_distance.to_f
+
+			if GeoHelper.distance_less_than_value(min_distance, player.loc, self.get_treasure_loc) then
+				self.attach_treasure_to_player(player)
+				return true
+			end
 		end
 		false
   end

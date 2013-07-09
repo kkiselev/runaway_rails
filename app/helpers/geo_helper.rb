@@ -13,6 +13,32 @@ module GeoHelper
 		class << self
 			attr_accessor	:map_sizes_
 
+			def distance_less_than_value(value, p1, p2)
+				v = value * METERS_TO_POINTS_SCALE_FACTOR
+				v2 = v * v
+				d2 = self.point_distance_2(p1, p2)
+				d2 < v2
+			end
+
+			def point_distance_2(point1, point2)
+				p1 = self.hash_from_point(point1)
+				p2 = self.hash_from_point(point2)
+				self.loc_distance_2(p1, p2)
+			end
+
+			def loc_distance_2(loc1, loc2)
+				self.distance_2(
+					loc1[:lng].to_f,
+					loc1[:lat].to_f,
+					loc2[:lng].to_f,
+					loc2[:lat].to_f
+				)
+			end
+
+			def distance_2(x1, y1, x2, y2)
+				(x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+			end
+
 			def point_from_hash(hash)
 				unless hash
 					nil
