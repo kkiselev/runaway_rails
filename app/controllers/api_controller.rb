@@ -266,7 +266,7 @@ class ApiController < ApplicationController
 					
 					# Add treasure to objects
 
-					treasure_loc = GeoHelper.hash_from_point(game.treasure_loc)
+					treasure_loc = GeoHelper.hash_from_point(game.get_treasure_loc)
 					treasure = {
 						loc: treasure_loc,
 						type: "treasure"

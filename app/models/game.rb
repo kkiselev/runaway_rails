@@ -43,6 +43,7 @@ class Game < ActiveRecord::Base
   def attach_treasure_to_player(player)
   	self.treasure_holder_id = player.id
   	self.treasure_attached_at = Time.now
+  	self.treasure_loc = nil
   	self
   end
 
@@ -77,6 +78,16 @@ class Game < ActiveRecord::Base
 			treasure_safe_hold_time: self.treasure_safe_hold_time,
 			allowed_inactivity_time: self.allowed_inactivity_time
 		}
+  end
+
+  def get_treasure_loc
+  	ret = nil
+  	if self.treasure_holder_id then	
+  		player = Player.find_by_id(self.treasure_holder_id)
+  		ret = player.loc if player
+  	else
+  		ret = self.treasure_loc
+  	end
   end
 
 end
