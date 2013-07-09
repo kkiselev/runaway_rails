@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  attr_accessible :area, :name, :treasure_loc, :treasure_holder_id, :allowed_inactivity_time
+  attr_accessible :area, :name, :treasure_loc, :treasure_holder_id, :treasure_attached_at, :allowed_inactivity_time
   has_many :players
 
   self.rgeo_factory_generator = RGeo::Geos.factory_generator
