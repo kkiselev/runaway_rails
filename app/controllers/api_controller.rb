@@ -263,6 +263,30 @@ class ApiController < ApplicationController
 						objects << obj
 					end
 
+					
+					# Add treasure to objects
+
+					treasure_loc = GeoHelper.hash_from_point(game.treasure_loc)
+					treasure = {
+						loc: treasure_loc,
+						type: "treasure"
+					}
+
+					if game.treasure_holder_id then
+						holder = Player.find_by_id(game.treasure_holder_id)
+						if holder then
+							treasure[:holder] = {
+								id: holder.id,
+								type: "player",
+								loc: treasure_loc
+							}
+							treasure[:attached_at] = game.treasure_attached_at
+							treasure[:safe_hold_time] = game.treasure_safe_hold_time
+						end
+					end
+
+					objects << treasure
+
 					# TODO: Add treasure object
 
 					api_response_with(200, {
@@ -281,9 +305,15 @@ class ApiController < ApplicationController
 			unless player and game
 				error_response_with(401, "Unathorized")
 			else
-				ok = game.attach_treasure_to_player_if_possible(player)
-				if ok then
-					game.save
+				attach_ok = false
+			
+				game.transaction do
+					game.lock!
+					attach_ok = game.attach_treasure_to_player_if_possible(player)
+					game.save if attach_ok
+				end
+
+				if attach_ok then
 					api_response_with(200, {
 						game: game.to_hash
 					})

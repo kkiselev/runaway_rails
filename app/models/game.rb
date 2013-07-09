@@ -42,7 +42,7 @@ class Game < ActiveRecord::Base
 
   def attach_treasure_to_player(player)
   	self.treasure_holder_id = player.id
-  	self.treasure_attached_at = Time.now.to_i
+  	self.treasure_attached_at = Time.now
   	self
   end
 
@@ -59,6 +59,9 @@ class Game < ActiveRecord::Base
   	cur_timestamp = Time.now.to_i
 		if not self.treasure_attached_at or (self.treasure_attached_at.to_i + self.treasure_safe_hold_time < cur_timestamp) then
 			self.attach_treasure_to_player(player)
+			return true
+		end
+		if player and player.id == self.treasure_holder_id then
 			return true
 		end
 		false

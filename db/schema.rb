@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130709121205) do
+ActiveRecord::Schema.define(:version => 20130709123618) do
 
   create_table "accounts", :force => true do |t|
     t.string   "login"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20130709121205) do
     t.integer  "treasure_holder_id"
     t.integer  "allowed_inactivity_time"
     t.datetime "treasure_attached_at"
+    t.integer  "treasure_safe_hold_time"
   end
 
   create_table "players", :force => true do |t|
