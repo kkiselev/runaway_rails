@@ -277,7 +277,6 @@ class ApiController < ApplicationController
 						if holder then
 							treasure[:holder] = {
 								id: holder.id,
-								type: "player",
 								loc: treasure_loc
 							}
 							treasure[:attached_at] = game.treasure_attached_at
