@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20130708145811) do
     t.datetime "updated_at",                                                         :null => false
     t.spatial  "area",                    :limit => {:srid=>4326, :type=>"polygon"}
     t.spatial  "treasure_loc",            :limit => {:srid=>4326, :type=>"point"}
+    t.integer  "treasure_holder_id"
     t.integer  "allowed_inactivity_time"
   end
 

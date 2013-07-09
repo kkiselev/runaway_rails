@@ -24,7 +24,7 @@ class Game < ActiveRecord::Base
   		player = Player.find_by_id(self.treasure_holder_id)
   		cur_time = Time.now
 
-  		unless player and ((player.updated_at - cur_time).to_i > self.allowed_inactivity_time.to_i)
+  		unless player and (cur_time.to_i - player.updated_at.to_i < self.allowed_inactivity_time)
   			self.treasure_holder_id = nil
   			self.save
   		end

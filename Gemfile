@@ -34,6 +34,9 @@ gem 'rp_clustering-rgeo-activerecord', :git => 'http://github.com/kkiselev/rp_cl
 gem 'rabl'
 gem 'oj'
 
+gem 'whenever', :require => false
+
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
